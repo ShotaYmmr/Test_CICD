@@ -1,0 +1,39 @@
+---
+aws:
+  common:
+    region: ap-northeast-1
+  vpc:
+    name: Hello_Auto_VPC
+    cidr_block: 10.10.0.0/16
+    tags:
+      Name: Hello_Auto_VPC
+    igw:
+      tags:
+        Name: Hallo_Auto_IGW
+    subnet:
+      subnet1:
+        tags:
+          Name: public-sub
+        cidr: 10.10.1.0/24
+        zone: a
+    route_table:
+      tags:
+        name: Hallo_Auto_RT
+    security_group:
+      name: Hello_Auto_SG
+      description: EC2 group
+      rules:
+        - proto: tcp
+          ports:
+            - 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          ports:
+            - 80
+          cidr_ip: 0.0.0.0/0
+    ec2:
+      name: Hello_Auto_EC2
+      instance_type: t2.micro
+      image: ami-07f4cb4629342979c
+    key:
+      name: hello_auto_key

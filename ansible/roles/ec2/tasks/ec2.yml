@@ -1,0 +1,54 @@
+---
+- name: security group取得
+  ec2_group_facts:
+    region: "{{ aws.common.region }}"
+    filters:
+      "tag:Name": "{{ aws.vpc.security_group.name }}"
+  register: ec2_group_facts
+  check_mode: no
+
+- name: subnet取得
+  ec2_vpc_subnet_facts:
+    region: "{{ aws.common.region }}"
+    filters:
+      "tag:Name": "{{ aws.vpc.subnet.subnet1.tags.Name }}"
+  register: ec2_subnet_facts
+  check_mode: no
+
+- name: key作成
+  ec2_key:
+    name: "{{ aws.vpc.key.name }}"
+    region: "{{ aws.common.region }}"
+  register: keypair_regst
+
+- name: 認証ファイル作成
+  file: path=~/.ssh/{{ keypair_regst.key.name }}.pem
+    state=touch
+    mode=0700
+
+- name: 認証鍵にデータを追加する
+  shell: echo "{{ keypair_regst.key.private_key }}" > ~/.ssh/{{ aws.vpc.key.name }}.pem
+  when: keypair_regst.key.private_key is defined
+
+- name: ec2作成
+  ec2:
+    key_name: "{{ aws.vpc.key.name }}"
+    group_id: "{{ ec2_group_facts.security_groups[0].group_id }}"
+    vpc_subnet_id: "{{ ec2_subnet_facts.subnets[0].id }}"
+    assign_public_ip: yes
+    instance_type: "{{ aws.vpc.ec2.instance_type }}"
+    region: "{{ aws.common.region }}"
+    image: "{{ aws.vpc.ec2.image }}"
+    wait: yes
+    wait_timeout: "300"
+    count_tag:
+      Name: "{{ aws.vpc.ec2.name }}"
+    exact_count: 1
+    instance_tags:
+      Name: "{{ aws.vpc.ec2.name }}"
+  register: ec2
+
+- name: ec2作成完了待ち
+  wait_for:
+    port: 22
+    host: "{{ ec2.tagged_instances.0.public_ip }}"
