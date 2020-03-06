@@ -3,7 +3,7 @@ TARGET_BRANCH=master
 
 # clone repository
 if [[ ! `ls | grep Hello-Automation-World-Product` ]]; then
-    git clone -b $TARGET_BRANCH https://github.com/sendo111/Hello-Automation-World-Product.git
+    git clone -b $TARGET_BRANCH https://github.com/ShotaYmmr/Test_CICD.git 
 fi
 
 # change working branch
