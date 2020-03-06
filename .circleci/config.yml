@@ -9,8 +9,8 @@ jobs:
           name: docker-compose up
           command: docker-compose up -d --build
       - run:
-          name: wait 15 seconds for DB to start
-          command: sleep 15
+          name: wait 30 seconds for DB to start
+          command: sleep 30
       - run:
           name: execute django unittest
           command: docker-compose run haw ./manage.py test
