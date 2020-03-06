@@ -2,7 +2,6 @@ version: 2.0
 jobs:
   exec-app-test:
     machine:
-      # Ubuntu v14.04 (https://circleci.com/docs/ja/2.0/configuration-reference/)
       image: circleci/classic:edge
     steps:
       - checkout
@@ -32,7 +31,7 @@ jobs:
           command: sh .circleci/authorize-security-group-ingress.sh ${AWS_REGION} ${AWS_SECURITY_GROUP}
       - add_ssh_keys:
           fingerprints:
-            - "18:b2:cd:b5:f3:50:85:c2:6e:9d:d7:36:29:c1:56:da"
+            - ${AWS_FINGERPRINT}
       - run:
           name: scp deploy.sh
           command: scp .circleci/deploy.sh ${USER_NAME}@${HOST_NAME}:/home/ubuntu/
