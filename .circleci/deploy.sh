@@ -2,7 +2,7 @@
 TARGET_BRANCH=master
 
 # clone repository
-if [[ ! `ls | grep Hello-Automation-World-Product` ]]; then
+if [[ ! `ls | grep Test_CICD` ]]; then
     git clone -b $TARGET_BRANCH https://github.com/ShotaYmmr/Test_CICD.git 
 fi
 
