@@ -1,0 +1,44 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:1.16.1
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
+      - ./haw/haw_book_manage/static:/static
+    depends_on:
+      - haw
+
+  mysql:
+    image: mysql:5.7
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Xv8eFwmD
+      MYSQL_DATABASE: app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: hogeXv8eFwmD
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+
+  haw:
+    build: ./haw
+    container_name: haw
+    volumes:
+      - ./haw:/haw
+    command: >
+      bash -c "sleep 15 &&
+      python ./manage.py migrate &&
+      uwsgi --socket :8000 --module haw.wsgi"
+    expose:
+      - "8000"
+    depends_on:
+      - mysql
+    tty: true

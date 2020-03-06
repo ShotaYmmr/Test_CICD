@@ -1,0 +1,23 @@
+#input_book_data {
+    text-align: center;
+}
+
+.cp_iptxt {
+	position: relative;
+	margin: 40px 3%;
+}
+.cp_iptxt input[type='text'] {
+	font: 15px/24px sans-serif;
+	box-sizing: border-box;
+	padding: 0.3em;
+	transition: 0.3s;
+	letter-spacing: 1px;
+	color: #aaaaaa;
+	border: none;
+	border-bottom: 2px solid #1b2538;
+	background: transparent;
+}
+
+.ef input[type='text']:focus {
+	outline: none;
+}

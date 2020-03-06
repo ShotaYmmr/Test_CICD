@@ -1,0 +1,41 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css">
+        <link rel="stylesheet" href="{% static 'css/common.css' %}">
+        <link rel="stylesheet" href="{% static 'css/create.css' %}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+        <title>書籍登録画面</title>
+    </head>
+    <body>
+        <form id="input_book_data" method="post" action="">{% csrf_token %}
+            <div class="cp_iptxt">
+                <label class="ef">
+                    <input type="text" name="title" placeholder="書籍名" pattern=".*\S+.*" title="空白文字は許可されていません" required/>
+                </label>
+            </div>
+            <div class="cp_iptxt">
+                <label class="ef">
+                    <input type="text" name="author" placeholder="著者" pattern=".*\S+.*" title="空白文字は許可されていません" required/>
+                </label>
+            </div>
+            <div class="cp_iptxt">
+                <label class="ef">
+                    <input type="text" name="publisher" placeholder="出版社" pattern=".*\S+.*" title="空白文字は許可されていません" required/>
+                </label>
+            </div>
+            <div class="cp_iptxt">
+                <label class="ef">
+                    <input id="finish_date" type="text" name="finished_date" placeholder="読了日" required/>
+                </label>
+            </div>
+            <br>
+            <button id="create" type="submit" class="action-button">登録</button>
+        </form>
+    </body>
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/datepicker-ja.js' %}"></script>
+</html>

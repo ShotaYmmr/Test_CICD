@@ -1,0 +1,55 @@
+version: 2.0
+jobs:
+  exec-app-test:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - checkout
+      - run:
+          name: docker-compose up
+          command: docker-compose up -d --build
+      - run:
+          name: wait 15 seconds for DB to start
+          command: sleep 15
+      - run:
+          name: execute django unittest
+          command: docker-compose run haw ./manage.py test
+      - run:
+          name: execute django flake8
+          command: docker-compose run haw flake8 ./
+      - run:
+          name: docker-compose down
+          command: docker-compose down
+
+  exec-deploy:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - checkout
+      - run:
+          name: authorize-security-group-ingress
+          command: sh .circleci/authorize-security-group-ingress.sh ${AWS_REGION} ${AWS_SECURITY_GROUP}
+      - add_ssh_keys:
+          fingerprints:
+            - ${AWS_FINGERPRINT}
+      - run:
+          name: scp deploy.sh
+          command: scp .circleci/deploy.sh ${USER_NAME}@${HOST_NAME}:/home/ubuntu/
+      - run:
+          name: deploy
+          command: ssh -oStrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} "bash ./deploy.sh"
+      - run:
+          name: revoke-security-group-ingress
+          command: sh .circleci/revoke-security-group-ingress.sh ${AWS_REGION} ${AWS_SECURITY_GROUP}
+
+workflows:
+  version: 2
+  haw-deploy-exec:
+    jobs:
+      - exec-app-test
+      - exec-deploy:
+          requires:
+            - exec-app-test
+          filters:
+            branches:
+              only: master

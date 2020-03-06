@@ -1,0 +1,31 @@
+- name: apt update
+  apt:
+    update_cache: yes
+
+- name: apt upgrade
+  apt:
+    upgrade: dist
+
+- name: apt autoremove
+  apt:
+    autoremove: yes
+
+- name: Install Pakage Clrea
+  apt:
+    autoclean: yes
+
+- name: TimeZone Settings
+  timezone:
+    name: Asia/Tokyo
+
+- name: install language-pack-ja
+  apt: name={{ item }} update_cache=yes
+  with_items:
+    - language-pack-ja
+
+- name: language Setup
+  locale_gen:
+    name: ja_JP.UTF-8
+
+- name: change locale
+  command: update-locale LANG=ja_JP.UTF-8

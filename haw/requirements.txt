@@ -1,0 +1,5 @@
+Django==2.2.10
+flake8==3.7.9
+uWSGI==2.0.18
+Faker==4.0.0
+pymysql==0.8.0
