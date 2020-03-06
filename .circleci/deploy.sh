@@ -7,7 +7,7 @@ if [[ ! `ls | grep Hello-Automation-World-Product` ]]; then
 fi
 
 # change working branch
-cd Hello-Automation-World-Product
+cd Test_CICD
 
 # get remote diff
 git fetch origin
